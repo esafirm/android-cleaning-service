@@ -26,8 +26,12 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
     implementation("org.jdom:jdom2:2.0.6")
 
     val kotestVersion = "4.6.3"

@@ -76,12 +76,6 @@ abstract class AbstractRemover(
         this.dryRun = extension.dryRun
         this.excludeNames = extension.excludeNames.toMutableList()
 
-//        val moduleSrcDirs = project.rootProject.allprojects.filter {
-//            it.name != project.rootProject.name
-//        }.map {
-//            it.projectDir.path
-//        }
-
         scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
 
         Logger.log("[$fileType] ======== Start $fileType checking ========")
@@ -102,7 +96,7 @@ abstract class AbstractRemover(
         return pattern.containsMatchIn(scanTargetFileTexts)
     }
 
-    fun isMatchedExcludeNames(filePath: String): Boolean {
+    protected fun isMatchedExcludeNames(filePath: String): Boolean {
         return excludeNames.any { filePath.contains(it) }
     }
 
