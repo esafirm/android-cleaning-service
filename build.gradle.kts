@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "nolambda.stream.cleaningservice"
+group = "nolambda.stream"
 version = "1.0.0"
 
 plugins {
@@ -29,6 +29,15 @@ tasks.withType<Test> {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "cleaningservice"
+            from(components["java"])
+        }
+    }
 }
 
 dependencies {

@@ -1,6 +1,44 @@
 # Android Cleaning Service
 
+> This project is still in development phase
+
 A library to clean up your Android project
+
+## Include in your project
+
+In your `build.gradle`
+
+```
+repositories {
+  ...
+  maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+	implementation 'com.github.esafirm:android-cleaning-service:Tag'
+}
+```
+
+## Usage
+
+```kotlin
+// Specify config such as dry run
+val config = CleaningServiceConfig(dryRun = false)
+
+// Specify removers
+val removers = listOf(
+  DrawableFileRemover(),
+  StringXmlRemover()
+)
+
+// List all your module directories
+val moduleSrcDirs = listOf(
+   "/Users/esafirm/androidapp/app"
+)
+
+// Run the cleaning service
+removers.map { it.remove(moduleSrcDirs, extension) }
+```
 
 ## Runing Test
 

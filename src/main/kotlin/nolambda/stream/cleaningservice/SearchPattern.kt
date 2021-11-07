@@ -1,5 +1,7 @@
 package nolambda.stream.cleaningservice
 
+import java.util.*
+
 class SearchPattern {
 
     companion object {
@@ -14,14 +16,16 @@ class SearchPattern {
 
         private fun toCamelCaseWithUnderscore(name: String): String {
             return name.replace(Regex("(\\.)([A-Za-z0-9])")) {
-                "_${it.value[1].toString().toUpperCase()}"
+                "_${it.value[1].toString().uppercase()}"
             }
         }
 
         private fun toCamelCase(text: String): String {
             return text.replace(Regex("(_)([A-Za-z0-9])")) {
-                it.value[1].toString().toUpperCase()
-            }.capitalize()
+                it.value[1].toString().uppercase()
+            }.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
         }
 
         fun create(resourceName: String, target: String, type: Type = Type.DEFAULT): Regex {
