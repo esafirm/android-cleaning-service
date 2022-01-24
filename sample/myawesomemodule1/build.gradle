@@ -1,0 +1,6 @@
+apply from: "$rootDir/gradle/library.gradle"
+
+dependencies {
+    implementation project(':myawesomemodule3')
+    implementation project(':myawesomemodule2')
+}
