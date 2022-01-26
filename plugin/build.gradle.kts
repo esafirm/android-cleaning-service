@@ -1,13 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "nolambda.cleaningservice.plugin"
+group = "nolambda.stream"
 version = "1.0.0"
 
 plugins {
     kotlin("jvm")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish") version "0.10.1"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
     `maven-publish`
 }
 
@@ -32,10 +31,9 @@ java {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    shadow(project(":lib"))
+    implementation(project(":lib"))
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("com.github.stefanbirkner:system-rules:1.19.0")
 }
 
 

@@ -1,8 +1,5 @@
 // Include plugin
-pluginManagement {
-    includeBuild("../.")
-    includeBuild("../plugin")
-}
+includeBuild("..")
 
 // Sample project
 include(':app')
