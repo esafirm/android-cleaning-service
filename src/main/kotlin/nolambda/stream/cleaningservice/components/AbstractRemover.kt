@@ -27,6 +27,7 @@ abstract class AbstractRemover(
 
     companion object {
         private val FILE_TYPE_FILTER = Regex("(.*\\.xml)|(.*\\.kt)|(.*\\.java)|(.*\\.gradle)")
+        private const val DEBUG_MODE = true
 
         fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
             val stringBuilder = StringBuilder()
@@ -42,12 +43,16 @@ abstract class AbstractRemover(
                 }
 
             moduleSrcDirs.map { File("${it}/src") }
-                .filter { it.exists() }
+                .filter {
+                    val exist = it.exists()
+                    println("${it.path} exists: $exist")
+                    exist
+                }
                 .forEach { srcDirFile ->
                     srcDirFile.walk().filter {
                         FILE_TYPE_FILTER.matches(it.name)
                     }.forEach { f ->
-                        stringBuilder.append(f.readText().replace("\n", "").replace(" ", ""))
+                        stringBuilder.append(f.readText())
                     }
                 }
 
@@ -77,6 +82,12 @@ abstract class AbstractRemover(
         this.excludeNames = extension.excludeNames.toMutableList()
 
         scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
+
+        val targetDir = File("./build").apply {
+            mkdirs()
+        }
+        val targetFile = File(targetDir, "target_file")
+        targetFile.writeText(scanTargetFileTexts)
 
         Logger.log("[$fileType] ======== Start $fileType checking ========")
 

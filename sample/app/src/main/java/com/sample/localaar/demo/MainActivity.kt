@@ -15,5 +15,7 @@ class MainActivity : AppCompatActivity() {
         textView2.text = AwesomeModule1.greet
         textView3.text = AwesomeModule2.greet
         textView4.text = AwesomeModule3.greet
+
+        setContentView(R.layout.activity_one)
     }
 }
