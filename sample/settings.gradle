@@ -1,3 +1,10 @@
+// Include plugin
+pluginManagement {
+    includeBuild("../.")
+    includeBuild("../plugin")
+}
+
+// Sample project
 include(':app')
 include(':myawesomemodule1')
 include(':myawesomemodule2')

@@ -4,7 +4,7 @@ group = "nolambda.stream"
 version = "1.0.0"
 
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm")
     `maven-publish`
 }
 

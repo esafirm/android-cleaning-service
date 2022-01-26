@@ -9,7 +9,7 @@ import nolambda.stream.cleaningservice.plugin.utils.getDistributionDirectory
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
-class CleaningTask : DefaultTask() {
+abstract class CleaningTask : DefaultTask() {
 
     companion object {
         private const val LOG_FILE_NAME = "cleaning_service_log.txt"
