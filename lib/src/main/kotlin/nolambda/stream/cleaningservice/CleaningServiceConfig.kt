@@ -6,8 +6,8 @@ import nolambda.stream.cleaningservice.utils.Logger
 import nolambda.stream.cleaningservice.utils.SimpleLogger
 
 class CleaningServiceConfig(
-    val extraRemovers: List<AbstractRemover> = listOf(),
-    val excludeNames: List<String> = listOf(),
+    val extraRemovers: List<AbstractRemover> = emptyList(),
+    val excludeNames: Set<String> = emptySet(),
     val dryRun: Boolean = true,
     val logger: Logger = SimpleLogger()
 )
