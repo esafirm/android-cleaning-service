@@ -10,11 +10,16 @@ class CleaningServicePlugin : Plugin<Project> {
         }
 
         val ext = target.extensions.create("cleaningService", CleaningServicePluginExtension::class.java)
+        val config = ext.toConfig()
 
         target.subprojects.forEach {
             it.tasks.register("cleaningService", CleaningTask::class.java) { task ->
-                task.config.set(ext.toConfig())
+                task.config.set(config)
             }
+        }
+
+        target.tasks.register("cleaningServiceAll", CleaningAllTask::class.java) { task ->
+            task.config.set(config)
         }
     }
 }
