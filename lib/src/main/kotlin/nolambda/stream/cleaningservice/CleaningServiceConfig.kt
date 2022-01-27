@@ -1,6 +1,6 @@
 package nolambda.stream.cleaningservice
 
-import nolambda.stream.cleaningservice.components.AbstractRemover
+import nolambda.stream.cleaningservice.remover.AbstractRemover
 
 data class CleaningServiceConfig(
     val extraRemovers: List<AbstractRemover> = listOf(),

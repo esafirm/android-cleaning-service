@@ -1,4 +1,4 @@
-package nolambda.stream.cleaningservice.components.file
+package nolambda.stream.cleaningservice.remover.file
 
 import nolambda.stream.cleaningservice.SearchPattern
 

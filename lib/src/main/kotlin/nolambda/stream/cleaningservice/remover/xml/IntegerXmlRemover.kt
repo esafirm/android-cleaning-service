@@ -1,4 +1,4 @@
-package nolambda.stream.cleaningservice.components.xml
+package nolambda.stream.cleaningservice.remover.xml
 
 class IntegerXmlRemover : XmlValueRemover(
     fileType = "integer",

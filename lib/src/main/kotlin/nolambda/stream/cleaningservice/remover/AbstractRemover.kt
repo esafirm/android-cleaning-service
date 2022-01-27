@@ -1,8 +1,8 @@
-package nolambda.stream.cleaningservice.components
+package nolambda.stream.cleaningservice.remover
 
-import nolambda.stream.cleaningservice.utils.Logger
-import nolambda.stream.cleaningservice.SearchPattern
 import nolambda.stream.cleaningservice.CleaningServiceConfig
+import nolambda.stream.cleaningservice.SearchPattern
+import nolambda.stream.cleaningservice.utils.LoggerProvider
 import java.io.File
 
 abstract class AbstractRemover(
@@ -25,9 +25,10 @@ abstract class AbstractRemover(
     val type: SearchPattern.Type
 ) {
 
+    protected val logger by lazy { LoggerProvider.getLogger() }
+
     companion object {
         private val FILE_TYPE_FILTER = Regex("(.*\\.xml)|(.*\\.kt)|(.*\\.java)|(.*\\.gradle)")
-        private const val DEBUG_MODE = true
 
         fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
             val stringBuilder = StringBuilder()
@@ -89,11 +90,11 @@ abstract class AbstractRemover(
         val targetFile = File(targetDir, "target_file")
         targetFile.writeText(scanTargetFileTexts)
 
-        Logger.log("[$fileType] ======== Start $fileType checking ========")
+        logger.log("[$fileType] ======== Start $fileType checking ========")
 
         moduleSrcDirs.forEach {
             val moduleSrcName = it
-            Logger.log("[$fileType] $moduleSrcName")
+            logger.log("[$fileType] $moduleSrcName")
 
             val resDirFile = File("${it}/src/main/res")
             if (resDirFile.exists()) {

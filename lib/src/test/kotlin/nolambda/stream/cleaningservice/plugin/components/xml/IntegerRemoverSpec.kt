@@ -4,7 +4,7 @@ import io.kotest.core.datatest.forAll
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
-import nolambda.stream.cleaningservice.components.xml.IntegerXmlRemover
+import nolambda.stream.cleaningservice.remover.xml.IntegerXmlRemover
 
 class IntegerRemoverSpec : FunSpec({
 

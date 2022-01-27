@@ -4,7 +4,7 @@ import io.kotest.core.datatest.forAll
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
-import nolambda.stream.cleaningservice.components.file.LayoutFileRemover
+import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
 
 class LayoutRemoverSpec : FunSpec({
 

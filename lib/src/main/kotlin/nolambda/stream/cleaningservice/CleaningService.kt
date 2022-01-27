@@ -1,7 +1,7 @@
 package nolambda.stream.cleaningservice
 
-import nolambda.stream.cleaningservice.components.file.DrawableFileRemover
-import nolambda.stream.cleaningservice.components.file.LayoutFileRemover
+import nolambda.stream.cleaningservice.remover.file.DrawableFileRemover
+import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
 import java.io.File
 
 fun main() {

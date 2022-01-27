@@ -1,7 +1,6 @@
-package nolambda.stream.cleaningservice.components.file
+package nolambda.stream.cleaningservice.remover.file
 
-import nolambda.stream.cleaningservice.components.AbstractRemover
-import nolambda.stream.cleaningservice.utils.Logger
+import nolambda.stream.cleaningservice.remover.AbstractRemover
 import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import nolambda.stream.cleaningservice.SearchPattern
 import java.io.File
@@ -9,7 +8,7 @@ import java.io.File
 open class FileRemover(
     fileType: String,
     resourceName: String,
-    type: SearchPattern.Type = SearchPattern.Type.DEFAULT
+    type: SearchPattern.Type = SearchPattern.Type.DEFAULT,
 ) : AbstractRemover(fileType, resourceName, type) {
 
     override fun removeEach(resDirFile: File) {
@@ -19,7 +18,7 @@ open class FileRemover(
             if (DirectoryMatcher.matchLast(dir.path, fileType)) {
                 dir.walk().forEach { f ->
                     if (f.isDirectory.not()) {
-                        Logger.logDev("Check ${f.name}")
+                        logger.logDev("Check ${f.name}")
                         val result = removeFileIfNeed(f)
                         checkResult = checkResult || result
                     }
@@ -28,20 +27,20 @@ open class FileRemover(
         }
 
         if (checkResult) {
-            Logger.log("[$fileType]   Complete to remove files.")
+            logger.log("[$fileType]   Complete to remove files.")
         } else {
-            Logger.log("[$fileType]   No unused $fileType files.")
+            logger.log("[$fileType]   No unused $fileType files.")
         }
     }
 
     private fun removeFileIfNeed(file: File): Boolean {
         if (isMatchedExcludeNames(file.path)) {
-            Logger.logYellow("[${fileType}]   Ignore checking ${file.name}")
+            logger.logYellow("[${fileType}]   Ignore checking ${file.name}")
             return false
         }
         val isMatched = checkTargetTextMatches(extractFileName(file))
         return if (!isMatched) {
-            Logger.logGreen("[${fileType}]   Remove ${file.name}")
+            logger.logGreen("[${fileType}]   Remove ${file.name}")
             if (!dryRun) {
                 file.delete()
             }

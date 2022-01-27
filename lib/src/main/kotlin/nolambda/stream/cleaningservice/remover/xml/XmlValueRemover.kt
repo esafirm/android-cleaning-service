@@ -1,8 +1,7 @@
-package nolambda.stream.cleaningservice.components.xml
+package nolambda.stream.cleaningservice.remover.xml
 
 import nolambda.stream.cleaningservice.SearchPattern
-import nolambda.stream.cleaningservice.components.AbstractRemover
-import nolambda.stream.cleaningservice.utils.Logger
+import nolambda.stream.cleaningservice.remover.AbstractRemover
 import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import org.jdom2.Content
 import org.jdom2.Document
@@ -45,7 +44,7 @@ open class XmlValueRemover(
 
     private fun removeTagIfNeeded(file: File) {
         if (isMatchedExcludeNames(file.path)) {
-            Logger.logYellow("[${fileType}]   Ignore checking ${file.name}")
+            logger.logYellow("[${fileType}]   Ignore checking ${file.name}")
             return
         }
 
@@ -72,7 +71,7 @@ open class XmlValueRemover(
             } else if (content?.cType == Content.CType.Element) {
                 val element = content as Element
 
-                Logger.logDev("Element: ${element.name} ${element.value}")
+                logger.logDev("Element: ${element.name} ${element.value}")
 
                 if (element.name == tagName) {
                     val attr = element.getAttribute("name")
@@ -80,13 +79,13 @@ open class XmlValueRemover(
                     if (attr != null) {
                         // Check the element has tools:override attribute
                         if (element.getAttribute("override", TOOLS_NAMESPACE)?.value == "true") {
-                            Logger.logYellow("[${fileType}]   Skip checking ${attr.value} which has tools:override in ${file.name}")
+                            logger.logYellow("[${fileType}]   Skip checking ${attr.value} which has tools:override in ${file.name}")
                             continue
                         }
 
                         val isMatched = checkTargetTextMatches(attr.value)
                         if (!isMatched) {
-                            Logger.logGreen("[${fileType}]   Remove ${attr.value} in ${file.name}")
+                            logger.logGreen("[${fileType}]   Remove ${attr.value} in ${file.name}")
                             if (!dryRun) {
                                 iterator.remove()
                             }
@@ -104,7 +103,7 @@ open class XmlValueRemover(
                 removeFileIfNeeded(file)
             }
         } else {
-            Logger.log("[${fileType}]   No unused tags in ${file.name}")
+            logger.log("[${fileType}]   No unused tags in ${file.name}")
         }
     }
 
@@ -128,7 +127,7 @@ open class XmlValueRemover(
     private fun removeFileIfNeeded(file: File) {
         val doc = SAXBuilder().build(file)
         if (doc.rootElement.getChildren(tagName).size == 0) {
-            Logger.logGreen("[${fileType}]   Remove ${file.name}.")
+            logger.logGreen("[${fileType}]   Remove ${file.name}.")
             file.delete()
         }
     }
