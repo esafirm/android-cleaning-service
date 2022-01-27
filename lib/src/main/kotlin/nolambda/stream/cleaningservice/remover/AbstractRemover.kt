@@ -2,7 +2,8 @@ package nolambda.stream.cleaningservice.remover
 
 import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.SearchPattern
-import nolambda.stream.cleaningservice.utils.LoggerProvider
+import nolambda.stream.cleaningservice.report.ReportWriter
+import nolambda.stream.cleaningservice.utils.Logger
 import java.io.File
 
 abstract class AbstractRemover(
@@ -24,8 +25,6 @@ abstract class AbstractRemover(
      */
     val type: SearchPattern.Type
 ) {
-
-    protected val logger by lazy { LoggerProvider.getLogger() }
 
     companion object {
         private val FILE_TYPE_FILTER = Regex("(.*\\.xml)|(.*\\.kt)|(.*\\.java)|(.*\\.gradle)")
@@ -68,6 +67,12 @@ abstract class AbstractRemover(
     private var excludeNames = mutableListOf<String>()
     internal var dryRun = false
 
+    protected lateinit var logger: Logger
+        private set
+
+    protected lateinit var reportWriter: ReportWriter<*>
+        private set
+
     abstract fun removeEach(resDirFile: File)
 
     /**
@@ -81,6 +86,11 @@ abstract class AbstractRemover(
     fun remove(moduleSrcDirs: List<String>, extension: CleaningServiceConfig) {
         this.dryRun = extension.dryRun
         this.excludeNames = extension.excludeNames.toMutableList()
+        this.logger = extension.logger
+
+        // Create an instance of report engine
+        val engine = extension.reportEngineFactory()
+        this.reportWriter = engine.writer
 
         scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
 
@@ -101,6 +111,9 @@ abstract class AbstractRemover(
                 removeEach(resDirFile)
             }
         }
+
+        // Print the report
+        engine.printer.print()
     }
 
     internal fun checkTargetTextMatches(targetText: String): Boolean {

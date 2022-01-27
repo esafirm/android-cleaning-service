@@ -1,16 +1,5 @@
 package nolambda.stream.cleaningservice.utils
 
-object LoggerProvider {
-
-    private var internalLogger: Logger = SimpleLogger()
-
-    fun setLogger(logger: Logger) {
-        internalLogger = logger
-    }
-
-    fun getLogger(): Logger = internalLogger
-}
-
 class SimpleLogger : Logger {
 
     companion object {

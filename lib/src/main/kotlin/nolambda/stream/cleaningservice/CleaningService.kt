@@ -8,13 +8,13 @@ fun main() {
     val extension = CleaningServiceConfig()
     val removers = listOf(
         DrawableFileRemover(),
-        LayoutFileRemover()
+//        LayoutFileRemover()
     )
 
     val gojekModules = listOf(
-        "/Users/esa.firman/Documents/gojek/GoHost/send/kilatrewrite",
+//        "/Users/esa.firman/Documents/gojek/GoHost/send/kilatrewrite",
         "/Users/esa.firman/Documents/gojek/GoHost/gojek",
-        "/Users/esa.firman/Documents/gojek/GoHost/gofood/food"
+//        "/Users/esa.firman/Documents/gojek/GoHost/gofood/food"
     )
 
     removers.map { it.remove(gojekModules, extension) }

@@ -41,6 +41,7 @@ open class FileRemover(
         val isMatched = checkTargetTextMatches(extractFileName(file))
         return if (!isMatched) {
             logger.logGreen("[${fileType}]   Remove ${file.name}")
+            reportWriter.write(fileType, file.name)
             if (!dryRun) {
                 file.delete()
             }

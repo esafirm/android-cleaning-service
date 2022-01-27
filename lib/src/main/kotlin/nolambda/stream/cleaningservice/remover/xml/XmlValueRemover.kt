@@ -86,6 +86,7 @@ open class XmlValueRemover(
                         val isMatched = checkTargetTextMatches(attr.value)
                         if (!isMatched) {
                             logger.logGreen("[${fileType}]   Remove ${attr.value} in ${file.name}")
+                            reportWriter.write(fileType, attr.value, file.name)
                             if (!dryRun) {
                                 iterator.remove()
                             }
@@ -128,6 +129,7 @@ open class XmlValueRemover(
         val doc = SAXBuilder().build(file)
         if (doc.rootElement.getChildren(tagName).size == 0) {
             logger.logGreen("[${fileType}]   Remove ${file.name}.")
+            reportWriter.write(fileType, file.name)
             file.delete()
         }
     }
