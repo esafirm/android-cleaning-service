@@ -2,34 +2,38 @@ package nolambda.stream.cleaningservice.remover
 
 import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.SearchPattern
+import nolambda.stream.cleaningservice.report.ReportEngine
 import nolambda.stream.cleaningservice.report.ReportWriter
 import nolambda.stream.cleaningservice.utils.Logger
 import java.io.File
 
+/**
+ * @param fileType directory/file name to find files like drawable, dimen, string
+ * @param resourceName Resource name to check its existence like @`string`/app_name, $.`string`/app_name
+ * @param type * Search pattern. ex) theme should specified to Type.STYLE
+ */
 abstract class AbstractRemover(
-
-    /**
-     * directory/file name to find files like drawable, dimen, string
-     */
     val fileType: String,
-
-    /**
-     * Resource name to check its existence like @`string`/app_name, $.`string`/app_name
-     */
     val resourceName: String,
-
-
-    /**
-     * Search pattern
-     * ex) theme should specified to Type.STYLE
-     */
-    val type: SearchPattern.Type
+    val type: SearchPattern.Type,
+    private val reportEngine: ReportEngine
 ) {
 
     companion object {
         private val FILE_TYPE_FILTER = Regex("(.*\\.xml)|(.*\\.kt)|(.*\\.java)|(.*\\.gradle)")
 
+        private fun checkIfDirExists(dirs: List<String>) {
+            dirs.forEach {
+                val file = File(it)
+                if (file.exists().not()) {
+                    error("Directory $it is not exits")
+                }
+            }
+        }
+
         fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
+            checkIfDirExists(moduleSrcDirs)
+
             val stringBuilder = StringBuilder()
 
             moduleSrcDirs.map { File(it) }
@@ -43,11 +47,6 @@ abstract class AbstractRemover(
                 }
 
             moduleSrcDirs.map { File("${it}/src") }
-                .filter {
-                    val exist = it.exists()
-                    println("${it.path} exists: $exist")
-                    exist
-                }
                 .forEach { srcDirFile ->
                     srcDirFile.walk().filter {
                         FILE_TYPE_FILTER.matches(it.name)
@@ -70,8 +69,7 @@ abstract class AbstractRemover(
     protected lateinit var logger: Logger
         private set
 
-    protected lateinit var reportWriter: ReportWriter<*>
-        private set
+    protected val reportWriter: ReportWriter<*> = reportEngine.writer
 
     abstract fun removeEach(resDirFile: File)
 
@@ -87,10 +85,6 @@ abstract class AbstractRemover(
         this.dryRun = extension.dryRun
         this.excludeNames = extension.excludeNames.toMutableList()
         this.logger = extension.logger
-
-        // Create an instance of report engine
-        val engine = extension.reportEngineFactory()
-        this.reportWriter = engine.writer
 
         scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
 
@@ -113,7 +107,7 @@ abstract class AbstractRemover(
         }
 
         // Print the report
-        engine.printer.print()
+        reportEngine.printer.print()
     }
 
     internal fun checkTargetTextMatches(targetText: String): Boolean {

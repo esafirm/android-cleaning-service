@@ -8,7 +8,7 @@ fun main() {
     val extension = CleaningServiceConfig()
     val removers = listOf(
         DrawableFileRemover(),
-//        LayoutFileRemover()
+        LayoutFileRemover()
     )
 
     val gojekModules = listOf(

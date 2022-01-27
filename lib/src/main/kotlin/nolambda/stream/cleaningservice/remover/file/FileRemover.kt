@@ -3,13 +3,17 @@ package nolambda.stream.cleaningservice.remover.file
 import nolambda.stream.cleaningservice.remover.AbstractRemover
 import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import nolambda.stream.cleaningservice.SearchPattern
+import nolambda.stream.cleaningservice.report.ReportEngine
 import java.io.File
 
 open class FileRemover(
     fileType: String,
     resourceName: String,
     type: SearchPattern.Type = SearchPattern.Type.DEFAULT,
-) : AbstractRemover(fileType, resourceName, type) {
+    reportEngine: ReportEngine = ReportEngine.create(
+        reportFileName = "cleaning_report_file_$fileType.csv"
+    )
+) : AbstractRemover(fileType, resourceName, type, reportEngine) {
 
     override fun removeEach(resDirFile: File) {
         var checkResult = false

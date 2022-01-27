@@ -2,6 +2,7 @@ package nolambda.stream.cleaningservice.remover.xml
 
 import nolambda.stream.cleaningservice.SearchPattern
 import nolambda.stream.cleaningservice.remover.AbstractRemover
+import nolambda.stream.cleaningservice.report.ReportEngine
 import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import org.jdom2.Content
 import org.jdom2.Document
@@ -23,8 +24,11 @@ open class XmlValueRemover(
     fileType: String,
     resourceName: String,
     private val tagName: String,
-    type: SearchPattern.Type = SearchPattern.Type.DEFAULT
-) : AbstractRemover(fileType, resourceName, type) {
+    type: SearchPattern.Type = SearchPattern.Type.DEFAULT,
+    reportEngine: ReportEngine = ReportEngine.create(
+        reportFileName = "cleaning_report_xml_${fileType}.csv"
+    )
+) : AbstractRemover(fileType, resourceName, type, reportEngine) {
 
     companion object {
         private val TOOLS_NAMESPACE = Namespace.getNamespace("tools", "http://schemas.android.com/tools")

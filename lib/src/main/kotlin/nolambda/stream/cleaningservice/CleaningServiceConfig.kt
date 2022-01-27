@@ -9,6 +9,5 @@ class CleaningServiceConfig(
     val extraRemovers: List<AbstractRemover> = listOf(),
     val excludeNames: List<String> = listOf(),
     val dryRun: Boolean = true,
-    val reportEngineFactory: () -> ReportEngine = { ReportEngine.default() },
     val logger: Logger = SimpleLogger()
 )
