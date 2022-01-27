@@ -1,0 +1,8 @@
+// Include plugin
+includeBuild("..")
+
+// Sample project
+include(':app')
+include(':myawesomemodule1')
+include(':myawesomemodule2')
+include(':myawesomemodule3')
