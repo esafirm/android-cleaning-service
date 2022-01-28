@@ -11,13 +11,7 @@ fun main() {
         LayoutFileRemover()
     )
 
-    val gojekModules = listOf(
-//        "/Users/esa.firman/Documents/gojek/GoHost/send/kilatrewrite",
-        "/Users/esa.firman/Documents/gojek/GoHost/gojek",
-//        "/Users/esa.firman/Documents/gojek/GoHost/gofood/food"
-    )
-
-    removers.map { it.remove(gojekModules, extension) }
+    removers.map { it.remove(getSampleModules(), extension) }
 }
 
 private fun getSampleModules(): List<String> {

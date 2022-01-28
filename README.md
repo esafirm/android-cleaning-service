@@ -15,11 +15,11 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.github.esafirm:android-cleaning-service:Tag'
+  implementation 'com.github.esafirm:android-cleaning-service:Tag'
 }
 ```
 
-## Usage
+## Library Usage
 
 ```kotlin
 // Specify config such as dry run
@@ -40,11 +40,31 @@ val moduleSrcDirs = listOf(
 removers.map { it.remove(moduleSrcDirs, extension) }
 ```
 
-## Runing Test
+## Runing Library Test
 
 ```
-$ ./gradlew test
+$ ./gradlew lib:test
 ```
+
+## Add Plugin to Your Project
+
+We haven't tried including the plugin with Jitpack, so currently
+the tested way to use the plugin is via included build
+
+Please check sample `settings.gradle` for the setup
+
+## Plugin Usage
+
+There are two tasks that you can run after applies the plugin
+
+1. `./gradlew cleaningServiceAll`
+
+This will run cleaning service to all of your projects path
+
+2. `./gradlew <module>:cleaningService`
+
+This will run cleaning service to that particular module and all modules that
+affected by it
 
 ## License
 
