@@ -13,6 +13,7 @@ class LayoutRemoverSpec : FunSpec({
     context("It should match the pattern") {
         forAll(
             row("R.layout.activity_main", true),
+            row(".activity_main.", true),
             row("@layout/activity_main\"", true),
             row("@layout/activity_main<", true),
             row("ActivityMainBinding", true),
