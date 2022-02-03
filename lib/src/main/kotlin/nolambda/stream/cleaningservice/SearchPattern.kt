@@ -40,7 +40,7 @@ class SearchPattern {
                 }
                 Type.LAYOUT -> {
                     val t = toCamelCase(target)
-                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|(R\\.${resourceName}\\.${target})|(${t}Binding)"
+                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|(R\\.${resourceName}\\.${target})|(${t}Binding)|(\\.${target}\\.)"
                 }
                 Type.DEFAULT -> {
                     "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|(R\\.${resourceName}\\.${target})"
