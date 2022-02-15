@@ -16,6 +16,12 @@ plugins {
     id 'nolambda.stream.cleaningservice' version '1.0.0'
 }
 
+cleaningService {
+    remover {
+        only("nolambda.stream.cleaningservice.remover.file.LayoutFileRemover")
+    }
+}
+
 allprojects {
     repositories {
         google()

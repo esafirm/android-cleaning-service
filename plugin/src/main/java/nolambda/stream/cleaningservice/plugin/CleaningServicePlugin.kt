@@ -9,17 +9,16 @@ class CleaningServicePlugin : Plugin<Project> {
             error("Plugin must be applied to root project")
         }
 
-        val ext = target.extensions.create("cleaningService", CleaningServicePluginExtension::class.java)
-        val config = ext.toConfig()
+        val ext = CleaningServicePluginExtension.get(target)
 
         target.subprojects.forEach {
             it.tasks.register("cleaningService", CleaningTask::class.java) { task ->
-                task.config.set(config)
+                task.extension.set(ext)
             }
         }
 
         target.tasks.register("cleaningServiceAll", CleaningAllTask::class.java) { task ->
-            task.config.set(config)
+            task.extension.set(ext)
         }
     }
 }
