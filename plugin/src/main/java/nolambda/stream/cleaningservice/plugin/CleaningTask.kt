@@ -1,11 +1,7 @@
 package nolambda.stream.cleaningservice.plugin
 
-import nolambda.stream.cleaningservice.CleaningServiceConfig
-import nolambda.stream.cleaningservice.remover.file.DrawableFileRemover
-import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
 import nolambda.stream.cleaningservice.plugin.utils.DependencyTracker
 import nolambda.stream.cleaningservice.plugin.utils.ToStringLogger
-import nolambda.stream.cleaningservice.plugin.utils.getDistributionDirectory
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
@@ -18,7 +14,7 @@ abstract class CleaningTask : DefaultTask() {
     }
 
     @get:Input
-    abstract val config: Property<CleaningServiceConfig>
+    abstract val extension: Property<CleaningServicePluginExtension>
 
     @TaskAction
     fun doClean() {
@@ -35,12 +31,10 @@ abstract class CleaningTask : DefaultTask() {
         val tracker = DependencyTracker(project.rootProject, logger)
         val coveredProjectPaths = tracker.findAllDependents(project).map { it.projectDir.path }
 
-        val removers = listOf(
-            DrawableFileRemover(),
-            LayoutFileRemover()
-        )
+        val pluginExtension = extension.get()
+        val removers = pluginExtension.removerExtension.removers
 
-        val config = config.getOrElse(CleaningServiceConfig())
+        val config = pluginExtension.toConfig()
         removers.map { it.remove(coveredProjectPaths, config) }
     }
 }

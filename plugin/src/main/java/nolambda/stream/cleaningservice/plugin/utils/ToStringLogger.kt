@@ -58,6 +58,7 @@ class ToStringLogger(
             gradle.addBuildListener(object : BuildAdapter() {
                 override fun buildFinished(result: BuildResult) {
                     onComplete(logger.buildString())
+                    gradle.removeListener(this)
                 }
             })
             return logger
