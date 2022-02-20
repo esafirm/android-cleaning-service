@@ -2,13 +2,15 @@ package nolambda.stream.cleaningservice
 
 import nolambda.stream.cleaningservice.remover.file.DrawableFileRemover
 import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
+import nolambda.stream.cleaningservice.remover.xml.StringXmlRemover
 import java.io.File
 
 fun main() {
-    val extension = CleaningServiceConfig()
+    val extension = CleaningServiceConfig(dryRun = false)
     val removers = listOf(
         DrawableFileRemover(),
-        LayoutFileRemover()
+        LayoutFileRemover(),
+        StringXmlRemover()
     )
 
     removers.map { it.remove(getSampleModules(), extension) }
@@ -22,7 +24,7 @@ private fun getSampleModules(): List<String> {
         .map { "myawesomemodule$it" }
         .map { File(sampleDir, it) }
 
-    val appModule = File(currentDirPath, "app/")
+    val appModule = File(sampleDir, "app/")
 
     val allModules = modules + appModule
 

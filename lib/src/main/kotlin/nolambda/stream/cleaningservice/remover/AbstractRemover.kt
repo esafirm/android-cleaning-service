@@ -26,7 +26,7 @@ abstract class AbstractRemover(
             dirs.forEach {
                 val file = File(it)
                 if (file.exists().not()) {
-                    error("Directory $it is not exits")
+                    error("Passed module directory: $it is not exits")
                 }
             }
         }

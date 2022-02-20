@@ -53,6 +53,7 @@ open class XmlValueRemover(
         }
 
         var isFileChanged = false
+        val isEscaped = escapeNumericEntity(file)
 
         val doc = SAXBuilder().build(file)
         val iterator = doc.rootElement.content.iterator()
@@ -105,7 +106,10 @@ open class XmlValueRemover(
         if (isFileChanged) {
             if (!dryRun) {
                 saveFile(doc, file)
-                removeFileIfNeeded(file)
+                val isFileRemoved = removeFileIfNeeded(file)
+                if (isEscaped && !isFileRemoved) {
+                    unescapeNumericEntity(file)
+                }
             }
         } else {
             logger.log("[${fileType}]   No unused tags in ${file.name}")
@@ -129,12 +133,47 @@ open class XmlValueRemover(
         file.writeText(stringWWriter.toString().replaceFirst(Regex("\\n\\s+</resources>"), "\n</resources>"))
     }
 
-    private fun removeFileIfNeeded(file: File) {
+    /**
+     * Remove the resource file if the element is empty
+     * @return true if the file is deleted
+     */
+    private fun removeFileIfNeeded(file: File): Boolean {
         val doc = SAXBuilder().build(file)
         if (doc.rootElement.getChildren(tagName).size == 0) {
             logger.logGreen("[${fileType}]   Remove ${file.name}.")
             reportWriter.write(fileType, file.name)
             file.delete()
+            return true
         }
+        return false
+    }
+
+    /**
+     * Escape numeric entities from xml file
+     * @see https://stackoverflow.com/questions/29127660/keep-numeric-character-entity-characters-such-as-10-13-when-parsing-xml
+     *
+     * @return true if there's value that escaped
+     */
+    private fun escapeNumericEntity(file: File): Boolean {
+        var isEscaped = false
+        val regex = Regex("&(.*?);")
+        val text = file.readText().replace(regex) { result ->
+            isEscaped = true
+            "{{${result.groupValues[1]}}}"
+        }
+        file.writeText(text)
+        return isEscaped
+    }
+
+    /**
+     * Unescape previously escaped numeric entities
+     */
+    private fun unescapeNumericEntity(file: File) {
+        val regex = Regex("\\{\\{(.*?)}}")
+        val text = file.readText().replace(regex) { result ->
+            result.groupValues
+            "&${result.groupValues[1]};"
+        }
+        file.writeText(text)
     }
 }
