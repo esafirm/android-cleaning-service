@@ -27,7 +27,6 @@ tasks.withType<Test> {
 }
 
 java {
-    withJavadocJar()
     withSourcesJar()
 }
 
