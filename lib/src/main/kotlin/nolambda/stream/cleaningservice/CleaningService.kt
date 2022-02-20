@@ -8,8 +8,8 @@ import java.io.File
 fun main() {
     val extension = CleaningServiceConfig(dryRun = false)
     val removers = listOf(
-//        DrawableFileRemover(),
-//        LayoutFileRemover()
+        DrawableFileRemover(),
+        LayoutFileRemover(),
         StringXmlRemover()
     )
 
