@@ -156,7 +156,7 @@ open class XmlValueRemover(
      */
     private fun escapeNumericEntity(file: File): Boolean {
         var isEscaped = false
-        val regex = Regex("&(.*);")
+        val regex = Regex("&(.*?);")
         val text = file.readText().replace(regex) { result ->
             isEscaped = true
             "{{${result.groupValues[1]}}}"
@@ -169,7 +169,7 @@ open class XmlValueRemover(
      * Unescape previously escaped numeric entities
      */
     private fun unescapeNumericEntity(file: File) {
-        val regex = Regex("\\{\\{(.*)}}")
+        val regex = Regex("\\{\\{(.*?)}}")
         val text = file.readText().replace(regex) { result ->
             result.groupValues
             "&${result.groupValues[1]};"
