@@ -16,6 +16,9 @@ class MainActivity : AppCompatActivity() {
         textView3.text = AwesomeModule2.greet
         textView4.text = AwesomeModule3.greet
 
+        // Unicode
+        textView4.text = getString(R.string.used_unicode_string, "man")
+
         setContentView(R.layout.activity_one)
     }
 }
