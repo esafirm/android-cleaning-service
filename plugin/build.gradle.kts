@@ -25,7 +25,6 @@ gradlePlugin {
 }
 
 java {
-    withJavadocJar()
     withSourcesJar()
 }
 
