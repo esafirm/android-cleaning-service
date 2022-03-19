@@ -20,12 +20,16 @@ open class FileRemover(
 
         resDirFile.walk().filter { it.isDirectory }.forEach { dir ->
             if (DirectoryMatcher.matchLast(dir.path, fileType)) {
-                dir.walk().forEach { f ->
-                    if (f.isDirectory.not()) {
-                        logger.logDev("Check ${f.name}")
-                        val result = removeFileIfNeed(f)
-                        checkResult = checkResult || result
-                    }
+
+                val listFiles = dir.listFiles { file, _ -> file.isDirectory.not() }.orEmpty()
+                val checkFileSize = listFiles.size
+
+                logger.logDev("Files needed to check: ${checkFileSize}")
+
+                listFiles.forEachIndexed { index, f ->
+                    logger.logDev("${index + 1}/$checkFileSize Check ${f.name}")
+                    val result = removeFileIfNeed(f)
+                    checkResult = checkResult || result
                 }
             }
         }
