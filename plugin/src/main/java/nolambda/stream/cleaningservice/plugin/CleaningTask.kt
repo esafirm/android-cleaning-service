@@ -19,6 +19,8 @@ abstract class CleaningTask : DefaultTask() {
 
     @TaskAction
     fun doClean() {
+        checkConfigureOnDemand()
+
         val logger = ToStringLogger.createWithLifecycle(project.gradle) { log ->
             val buildDir = project.buildDir
             if (buildDir.exists().not()) {
@@ -53,6 +55,16 @@ abstract class CleaningTask : DefaultTask() {
                 targetModulesDirs = targetPaths,
                 extension = config
             )
+        }
+    }
+
+    private fun checkConfigureOnDemand() {
+        val isConfigureOnDemand = project.rootProject.properties["org.gradle.configureondemand"] == "true"
+        if (isConfigureOnDemand) {
+            error("""
+                Cannot use module specific cleaning service if org.gradle.configureondemand=true
+                Please disable configure on demand first, or use root cleaningServiceAll task
+            """.trimIndent())
         }
     }
 }
