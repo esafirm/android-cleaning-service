@@ -14,6 +14,8 @@ class CsvReportPrinter(
         if (reportFile.exists()) {
             reportFile.delete()
         }
-        reportFile.appendText(reportText)
+        if (reportText.isNotBlank()) {
+            reportFile.appendText(reportText)
+        }
     }
 }

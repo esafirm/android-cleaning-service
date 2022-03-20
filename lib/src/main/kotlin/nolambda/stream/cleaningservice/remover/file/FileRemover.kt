@@ -1,9 +1,9 @@
 package nolambda.stream.cleaningservice.remover.file
 
-import nolambda.stream.cleaningservice.remover.AbstractRemover
-import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import nolambda.stream.cleaningservice.SearchPattern
+import nolambda.stream.cleaningservice.remover.AbstractRemover
 import nolambda.stream.cleaningservice.report.ReportEngine
+import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import java.io.File
 
 open class FileRemover(
@@ -21,10 +21,10 @@ open class FileRemover(
         resDirFile.walk().filter { it.isDirectory }.forEach { dir ->
             if (DirectoryMatcher.matchLast(dir.path, fileType)) {
 
-                val listFiles = dir.listFiles { file, _ -> file.isDirectory.not() }.orEmpty()
+                val listFiles = dir.listFiles { file -> file.isDirectory.not() }.orEmpty()
                 val checkFileSize = listFiles.size
 
-                logger.logDev("Files needed to check: ${checkFileSize}")
+                logger.logDev("Files needed to check: $checkFileSize")
 
                 listFiles.forEachIndexed { index, f ->
                     logger.logDev("${index + 1}/$checkFileSize Check ${f.name}")
