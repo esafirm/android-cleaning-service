@@ -81,12 +81,24 @@ abstract class AbstractRemover(
         return SearchPattern.create(resourceName, target, type)
     }
 
-    fun remove(moduleSrcDirs: List<String>, extension: CleaningServiceConfig) {
+    /**
+     * Run cleaning resource with specification that defined in [extension]
+     * The scope of check is defined in [scopeModuleDirs] and target will be defined in [targetModulesDirs]
+     * If we run the check on all modules, [scopeModuleDirs] and [targetModulesDirs] should be the same
+     *
+     * @param scopeModuleDirs - List of module project directory that will be the scope of check
+     * @param targetModulesDirs - List of module project directory that will be the target of removal
+     */
+    fun remove(
+        scopeModuleDirs: List<String>,
+        targetModulesDirs: List<String>,
+        extension: CleaningServiceConfig
+    ) {
         this.dryRun = extension.dryRun
         this.excludeNames = extension.excludeNames.toMutableList()
         this.logger = extension.logger
 
-        scanTargetFileTexts = createScanTargetFileTexts(moduleSrcDirs)
+        scanTargetFileTexts = createScanTargetFileTexts(scopeModuleDirs)
 
         val targetDir = File("./build").apply {
             mkdirs()
@@ -96,7 +108,7 @@ abstract class AbstractRemover(
 
         logger.log("[$fileType] ======== Start $fileType checking ========")
 
-        moduleSrcDirs.forEach {
+        targetModulesDirs.forEach {
             val moduleSrcName = it
             logger.log("[$fileType] $moduleSrcName")
 

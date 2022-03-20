@@ -18,7 +18,10 @@ plugins {
 
 cleaningService {
     remover {
-        only("nolambda.stream.cleaningservice.remover.file.LayoutFileRemover")
+        only(
+                "nolambda.stream.cleaningservice.remover.file.LayoutFileRemover",
+                "nolambda.stream.cleaningservice.remover.xml.StringXmlRemover"
+        )
     }
 }
 

@@ -13,7 +13,8 @@ fun main() {
         StringXmlRemover()
     )
 
-    removers.map { it.remove(getSampleModules(), extension) }
+    val modules = getSampleModules()
+    removers.map { it.remove(modules, modules, extension) }
 }
 
 private fun getSampleModules(): List<String> {

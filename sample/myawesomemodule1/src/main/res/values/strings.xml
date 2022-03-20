@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">myawesomeModule1</string>
     <string name="unused_unicode_string">&#169; %1$d xxxxxx v%2$s%3$s</string>
-    <string name="used_unicode_string">&#169; ay %1$s</string>
+    <string name="used_unicode_string">&#169; ay %1$s &amp;</string>
 </resources>
