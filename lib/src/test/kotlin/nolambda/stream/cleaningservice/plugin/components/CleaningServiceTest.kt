@@ -1,29 +1,36 @@
 package nolambda.stream.cleaningservice.plugin.components
 
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.remover.file.DrawableFileRemover
 import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
 import nolambda.stream.cleaningservice.remover.xml.StringXmlRemover
+import nolambda.stream.cleaningservice.report.ReportEngine
 import java.io.File
 
 class CleaningServiceSpek : StringSpec({
 
-    fun getSampleModules(): List<String> {
-        val currentDirPath = System.getProperty("user.dir")
-        val sampleDir = File(currentDirPath, "sample/")
+    val currentDirPath = File(System.getProperty("user.dir"))
+    val sampleDir = File(currentDirPath.parent, "sample/")
 
-        val modules = listOf(1, 2, 3)
-            .map { "myawesomemodule$it" }
-            .map { File(sampleDir, it) }
+    val cleaningServiceResultDir = File(sampleDir, ReportEngine.DEFAULT_DIR_NAME)
+    val targetFile = File(sampleDir, "build/target_file")
 
-        val appModule = File(sampleDir, "app/")
+    // Clean up existing results
+    cleaningServiceResultDir.deleteRecursively()
+    targetFile.delete()
 
-        val allModules = modules + appModule
+    val modules = listOf(1, 2, 3)
+        .map { "myawesomemodule$it" }
+        .map { File(sampleDir, it) }
 
-        return allModules.map { it.path }.also {
-            println("Scanning in ${it.joinToString("\n")}")
-        }
+    val appModule = File(sampleDir, "app/")
+
+    val allModules = modules + appModule
+
+    val sampleModules = allModules.map { it.path }.also {
+        println("Scanning in ${it.joinToString("\n")}")
     }
 
     "Sample scenario should run correctly" {
@@ -34,7 +41,14 @@ class CleaningServiceSpek : StringSpec({
             StringXmlRemover()
         )
 
-        val modules = getSampleModules()
-        removers.map { it.remove(modules, modules, extension) }
+        removers.map { it.remove(sampleModules, sampleModules, extension) }
+
+        // Check if report file is generated
+//        val generated = cleaningServiceResultDir.list().orEmpty()
+//        generated.size shouldBe 2
+
+        // Check unused file is deleted
+        val unusedFile = File(sampleDir, "myawesomemodule2/src/main/res/layout/acitivty_unused.xml")
+        unusedFile.exists() shouldBe false
     }
 })

@@ -8,7 +8,7 @@ class ReportEngine(
 ) {
 
     companion object {
-        private const val DEFAULT_DIR_NAME = "build/cleaning"
+        const val DEFAULT_DIR_NAME = "build/cleaning"
 
         fun create(
             reportDir: String = DEFAULT_DIR_NAME,
