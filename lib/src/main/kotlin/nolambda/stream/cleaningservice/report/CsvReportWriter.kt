@@ -1,12 +1,17 @@
 package nolambda.stream.cleaningservice.report
 
-class CsvReportWriter : ReportWriter<List<Array<out String>>> {
+import java.io.File
 
-    private val reportLines = mutableListOf<Array<out String>>()
+class CsvReportWriter(
+    private val pathResolver: PathResolver
+) : ReportWriter<List<String>> {
 
-    override fun write(vararg reports: String) {
-        reportLines.add(reports)
+    private val reportLines = mutableListOf<String>()
+
+    override fun write(file: File, vararg extraInfo: String) {
+        val line = "${extraInfo.joinToString()},${pathResolver.resolve(file)}"
+        reportLines.add(line)
     }
 
-    override fun dump(): List<Array<out String>> = reportLines
+    override fun dump(): List<String> = reportLines
 }

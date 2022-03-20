@@ -2,7 +2,6 @@ package nolambda.stream.cleaningservice.remover.xml
 
 import nolambda.stream.cleaningservice.SearchPattern
 import nolambda.stream.cleaningservice.remover.AbstractRemover
-import nolambda.stream.cleaningservice.report.ReportEngine
 import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import org.jdom2.Content
 import org.jdom2.Document
@@ -24,11 +23,8 @@ open class XmlValueRemover(
     fileType: String,
     resourceName: String,
     private val tagName: String,
-    type: SearchPattern.Type = SearchPattern.Type.DEFAULT,
-    reportEngine: ReportEngine = ReportEngine.create(
-        reportFileName = "cleaning_report_xml_${fileType}.csv"
-    )
-) : AbstractRemover(fileType, resourceName, type, reportEngine) {
+    type: SearchPattern.Type = SearchPattern.Type.DEFAULT
+) : AbstractRemover(fileType, resourceName, type) {
 
     companion object {
         private val TOOLS_NAMESPACE = Namespace.getNamespace("tools", "http://schemas.android.com/tools")
@@ -94,7 +90,7 @@ open class XmlValueRemover(
                         val isMatched = checkTargetTextMatches(attr.value)
                         if (!isMatched) {
                             logger.logGreen("[${fileType}]   Remove ${attr.value} in ${file.name}")
-                            reportWriter.write(fileType, attr.value, file.name)
+                            reportWriter.write(file, fileType, attr.value)
                             if (!dryRun) {
                                 iterator.remove()
                             }
@@ -144,7 +140,7 @@ open class XmlValueRemover(
         val doc = SAXBuilder().build(file)
         if (doc.rootElement.getChildren(tagName).size == 0) {
             logger.logGreen("[${fileType}]   Remove ${file.name}.")
-            reportWriter.write(fileType, file.name)
+            reportWriter.write(file, fileType)
             file.delete()
             return true
         }

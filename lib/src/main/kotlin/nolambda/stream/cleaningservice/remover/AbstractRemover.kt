@@ -15,8 +15,7 @@ import java.io.File
 abstract class AbstractRemover(
     val fileType: String,
     val resourceName: String,
-    val type: SearchPattern.Type,
-    private val reportEngine: ReportEngine
+    val type: SearchPattern.Type
 ) {
 
     companion object {
@@ -69,7 +68,9 @@ abstract class AbstractRemover(
     protected lateinit var logger: Logger
         private set
 
-    protected val reportWriter: ReportWriter<*> = reportEngine.writer
+    private lateinit var reportEngine: ReportEngine
+
+    protected val reportWriter: ReportWriter<*> by lazy { reportEngine.writer }
 
     abstract fun removeEach(resDirFile: File)
 
@@ -97,12 +98,11 @@ abstract class AbstractRemover(
         this.dryRun = extension.dryRun
         this.excludeNames = extension.excludeNames.toMutableList()
         this.logger = extension.logger
+        this.reportEngine = extension.reportEngineFactory.create(this)
 
         scanTargetFileTexts = createScanTargetFileTexts(scopeModuleDirs)
 
-        val targetDir = File("./build").apply {
-            mkdirs()
-        }
+        val targetDir = File("./build").apply { mkdirs() }
         val targetFile = File(targetDir, "target_file")
         targetFile.writeText(scanTargetFileTexts)
 

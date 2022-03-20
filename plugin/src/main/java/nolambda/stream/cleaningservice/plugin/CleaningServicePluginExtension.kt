@@ -3,6 +3,8 @@ package nolambda.stream.cleaningservice.plugin
 import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.remover.AbstractRemover
 import nolambda.stream.cleaningservice.remover.RemoverFactory
+import nolambda.stream.cleaningservice.report.DefaultReportEngineFactory
+import nolambda.stream.cleaningservice.report.PathResolver
 import nolambda.stream.cleaningservice.utils.NoopLogger
 import nolambda.stream.cleaningservice.utils.SimpleLogger
 import org.gradle.api.Action
@@ -10,6 +12,7 @@ import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
+import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class CleaningServicePluginExtension(factory: ObjectFactory) {
@@ -24,11 +27,16 @@ open class CleaningServicePluginExtension(factory: ObjectFactory) {
         action.execute(removerExtension)
     }
 
-    fun toConfig(): CleaningServiceConfig {
+    /**
+     * Convert the plugin extension to data class format to enforce immutability
+     * @param rootDir of the project, used for path resolving in report
+     */
+    fun toConfig(rootDir: File): CleaningServiceConfig {
         return CleaningServiceConfig(
             excludeNames = excludeNames.get(),
             dryRun = dryRun.get(),
             logger = if (enableLog.get()) SimpleLogger() else NoopLogger,
+            reportEngineFactory = DefaultReportEngineFactory(pathResolver = PathResolver.RelativeToParent(rootDir))
         )
     }
 
