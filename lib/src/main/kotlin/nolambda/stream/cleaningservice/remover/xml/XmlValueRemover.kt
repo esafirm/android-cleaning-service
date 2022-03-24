@@ -55,6 +55,9 @@ open class XmlValueRemover(
         var isFileChanged = false
         val isEscaped = if (!dryRun) escapeNumericEntity(file) else false
 
+        // If we escape the file, naturally the file is changed
+        if (isEscaped) isFileChanged = true
+
         val doc = SAXBuilder().build(file)
         val iterator = doc.rootElement.content.iterator()
 
