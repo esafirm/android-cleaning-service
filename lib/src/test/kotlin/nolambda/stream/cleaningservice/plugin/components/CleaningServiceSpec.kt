@@ -9,7 +9,7 @@ import nolambda.stream.cleaningservice.remover.xml.StringXmlRemover
 import nolambda.stream.cleaningservice.report.DefaultReportEngineFactory
 import java.io.File
 
-class CleaningServiceSpek : StringSpec({
+class CleaningServiceSpec : StringSpec({
 
     val currentDirPath = File(System.getProperty("user.dir"))
     val sampleDir = File(currentDirPath.parent, "sample/")

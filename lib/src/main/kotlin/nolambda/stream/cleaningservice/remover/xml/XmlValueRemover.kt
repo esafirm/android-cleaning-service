@@ -2,19 +2,14 @@ package nolambda.stream.cleaningservice.remover.xml
 
 import nolambda.stream.cleaningservice.SearchPattern
 import nolambda.stream.cleaningservice.remover.AbstractRemover
+import nolambda.stream.cleaningservice.remover.utils.XmlRemoverUtils
 import nolambda.stream.cleaningservice.utils.DirectoryMatcher
 import org.jdom2.Content
-import org.jdom2.Document
 import org.jdom2.Element
 import org.jdom2.Namespace
 import org.jdom2.Text
-import org.jdom2.Verifier
 import org.jdom2.input.SAXBuilder
-import org.jdom2.output.Format
-import org.jdom2.output.LineSeparator
-import org.jdom2.output.XMLOutputter
 import java.io.File
-import java.io.StringWriter
 
 /**
  * @param tagName: Tag name to extract value from xml like <`dimen` name="width">, <`string` name="app_name">
@@ -49,7 +44,7 @@ open class XmlValueRemover(
         }
 
         var isFileChanged = false
-        val isEscaped = if (!dryRun) escapeNumericEntity(file) else false
+        val isEscaped = if (!dryRun) XmlRemoverUtils.escapeNumericEntity(file) else false
 
         // If we escape the file, naturally the file is changed
         if (isEscaped) isFileChanged = true
@@ -104,75 +99,14 @@ open class XmlValueRemover(
 
         if (isFileChanged) {
             if (!dryRun) {
-                saveFile(doc, file)
-                val isFileRemoved = removeFileIfNeeded(file)
+                XmlRemoverUtils.saveFile(doc, file)
+                val isFileRemoved = XmlRemoverUtils.removeFileIfNeeded(file)
                 if (isEscaped && !isFileRemoved) {
-                    unescapeNumericEntity(file)
+                    XmlRemoverUtils.unescapeNumericEntity(file)
                 }
             }
         } else {
             logger.log("[${fileType}]   No unused tags in ${file.name}")
         }
-    }
-
-    private fun saveFile(doc: Document, file: File) {
-        val stringWWriter = StringWriter()
-
-        XMLOutputter().apply {
-            format = Format.getRawFormat()
-            format.setLineSeparator(LineSeparator.SYSTEM)
-            format.setTextMode(Format.TextMode.PRESERVE)
-            format.setEncoding("utf-8")
-            format.setEscapeStrategy { ch ->
-                Verifier.isHighSurrogate(ch)
-            }
-            output(doc, stringWWriter)
-        }
-
-        file.writeText(stringWWriter.toString().replaceFirst(Regex("\\n\\s+</resources>"), "\n</resources>"))
-    }
-
-    /**
-     * Remove the resource file if the element is empty
-     * @return true if the file is deleted
-     */
-    private fun removeFileIfNeeded(file: File): Boolean {
-        val doc = SAXBuilder().build(file)
-        if (doc.rootElement.getChildren(tagName).size == 0) {
-            logger.logGreen("[${fileType}]   Remove ${file.name}.")
-            reportWriter.write(file, fileType)
-            file.delete()
-            return true
-        }
-        return false
-    }
-
-    /**
-     * Escape numeric entities from xml file
-     * @see https://stackoverflow.com/questions/29127660/keep-numeric-character-entity-characters-such-as-10-13-when-parsing-xml
-     *
-     * @return true if there's value that escaped
-     */
-    private fun escapeNumericEntity(file: File): Boolean {
-        var isEscaped = false
-        val regex = Regex("&(.*?);")
-        val text = file.readText().replace(regex) { result ->
-            isEscaped = true
-            "{{${result.groupValues[1]}}}"
-        }
-        file.writeText(text)
-        return isEscaped
-    }
-
-    /**
-     * Unescape previously escaped numeric entities
-     */
-    private fun unescapeNumericEntity(file: File) {
-        val regex = Regex("\\{\\{(.*?)}}")
-        val text = file.readText().replace(regex) { result ->
-            result.groupValues
-            "&${result.groupValues[1]};"
-        }
-        file.writeText(text)
     }
 }
