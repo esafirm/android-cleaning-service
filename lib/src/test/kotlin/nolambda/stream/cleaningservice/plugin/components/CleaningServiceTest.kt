@@ -6,7 +6,7 @@ import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.remover.file.DrawableFileRemover
 import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
 import nolambda.stream.cleaningservice.remover.xml.StringXmlRemover
-import nolambda.stream.cleaningservice.report.ReportEngine
+import nolambda.stream.cleaningservice.report.DefaultReportEngineFactory
 import java.io.File
 
 class CleaningServiceSpek : StringSpec({
@@ -14,7 +14,7 @@ class CleaningServiceSpek : StringSpec({
     val currentDirPath = File(System.getProperty("user.dir"))
     val sampleDir = File(currentDirPath.parent, "sample/")
 
-    val cleaningServiceResultDir = File(sampleDir, ReportEngine.DEFAULT_DIR_NAME)
+    val cleaningServiceResultDir = File(sampleDir, DefaultReportEngineFactory.DEFAULT_DIR_NAME)
     val targetFile = File(sampleDir, "build/target_file")
 
     // Clean up existing results

@@ -13,7 +13,7 @@ class DefaultReportEngineFactory(
 ) : ReportEngineFactory {
 
     companion object {
-        private const val DEFAULT_DIR_NAME = "build/cleaning"
+        internal const val DEFAULT_DIR_NAME = "build/cleaning"
     }
 
     override fun create(remover: AbstractRemover): ReportEngine {
