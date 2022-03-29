@@ -56,7 +56,7 @@ class DeleteActionRemover(
 
                     val needToRemove = actions.find { it.id == name } != null
                     if (needToRemove) {
-                        logger.logDev("Removing XML with name: $name")
+                        logger.logDev("Removing XML entry with name: $name in ${xmlFile.path}")
                         iterator.remove()
                         isAfterRemoved = true
                     }
