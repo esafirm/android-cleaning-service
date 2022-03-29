@@ -10,8 +10,7 @@ import java.io.File
 
 class CleaningFromReportSpec : StringSpec({
 
-    val currentDirPath = File(System.getProperty("user.dir"))
-    val sampleDir = File(currentDirPath.parent, "sample/")
+    val sampleDir = File(projectRootDir(), "sample/")
     val reportDir = File(sampleDir, "build/cleaning/")
 
     val parser = DefaultReportParser(
@@ -46,6 +45,7 @@ class CleaningFromReportSpec : StringSpec({
     }
 }) {
     override fun afterSpec(spec: Spec) {
-        // Do git reset head hard for sample
+        // Remove changes to sample/
+        Command("git checkout -- sample/").runCommand(projectRootDirFile())
     }
 }
