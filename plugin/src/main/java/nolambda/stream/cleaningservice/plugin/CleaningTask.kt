@@ -36,18 +36,20 @@ abstract class CleaningTask : DefaultTask() {
 
         val pluginExtension = extension.get()
         val removers = pluginExtension.removerExtension.removers
-        val config = pluginExtension.toConfig()
+        val config = pluginExtension.toConfig(project.rootDir)
 
         val targetPaths = listOf(project.projectDir.path)
 
-        project.logger.log(LogLevel.LIFECYCLE, """
+        project.logger.log(
+            LogLevel.LIFECYCLE, """
             ============================================================
             Removers: ${removers.joinToString { it.javaClass.simpleName }}
             Scope: ${scopeProjectPaths.joinToString()}
             Target: ${targetPaths.joinToString()}
             Config: $config
             ============================================================
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         removers.forEach {
             it.remove(
@@ -61,10 +63,12 @@ abstract class CleaningTask : DefaultTask() {
     private fun checkConfigureOnDemand() {
         val isConfigureOnDemand = project.rootProject.properties["org.gradle.configureondemand"] == "true"
         if (isConfigureOnDemand) {
-            error("""
+            error(
+                """
                 Cannot use module specific cleaning service if org.gradle.configureondemand=true
                 Please disable configure on demand first, or use root cleaningServiceAll task
-            """.trimIndent())
+            """.trimIndent()
+            )
         }
     }
 }

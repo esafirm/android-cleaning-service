@@ -1,20 +1,22 @@
 package nolambda.stream.cleaningservice.plugin.components
 
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
 import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.remover.file.DrawableFileRemover
 import nolambda.stream.cleaningservice.remover.file.LayoutFileRemover
 import nolambda.stream.cleaningservice.remover.xml.StringXmlRemover
-import nolambda.stream.cleaningservice.report.ReportEngine
+import nolambda.stream.cleaningservice.report.DefaultReportEngineFactory
 import java.io.File
 
-class CleaningServiceSpek : StringSpec({
+class CleaningServiceSpec : StringSpec({
 
     val currentDirPath = File(System.getProperty("user.dir"))
     val sampleDir = File(currentDirPath.parent, "sample/")
 
-    val cleaningServiceResultDir = File(sampleDir, ReportEngine.DEFAULT_DIR_NAME)
+    val cleaningServiceResultDir = File(sampleDir, DefaultReportEngineFactory.DEFAULT_DIR_NAME)
     val targetFile = File(sampleDir, "build/target_file")
 
     // Clean up existing results
@@ -51,4 +53,9 @@ class CleaningServiceSpek : StringSpec({
         val unusedFile = File(sampleDir, "myawesomemodule2/src/main/res/layout/acitivty_unused.xml")
         unusedFile.exists() shouldBe false
     }
-})
+}) {
+    override fun afterTest(testCase: TestCase, result: TestResult) {
+        // Remove changes to sample/
+        Command("git checkout -- sample/").runCommand(projectRootDirFile())
+    }
+}

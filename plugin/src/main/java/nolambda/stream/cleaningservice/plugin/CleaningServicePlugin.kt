@@ -1,5 +1,6 @@
 package nolambda.stream.cleaningservice.plugin
 
+import nolambda.stream.cleaningservice.report.DefaultReportEngineFactory
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -19,6 +20,16 @@ class CleaningServicePlugin : Plugin<Project> {
 
         target.tasks.register("cleaningServiceAll", CleaningAllTask::class.java) { task ->
             task.extension.set(ext)
+        }
+
+        target.tasks.register("cleaningServiceFromReport", CleaningFromReportTask::class.java) { task ->
+            task.extension.set(ext)
+
+            val projectDir = target.layout.projectDirectory
+            task.reportDir.set(target.provider {
+                val dir = System.getProperty("cleaningReportDir", "")
+                projectDir.dir(dir.ifBlank{ DefaultReportEngineFactory.DEFAULT_DIR_NAME })
+            })
         }
     }
 }

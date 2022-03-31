@@ -18,7 +18,7 @@ abstract class CleaningAllTask : DefaultTask() {
         val pluginExtension = extension.get()
         val removers = pluginExtension.removerExtension.removers
 
-        val config = pluginExtension.toConfig()
+        val config = pluginExtension.toConfig(project.rootDir)
         removers.map { it.remove(coveredProjectPaths, coveredProjectPaths, config) }
     }
 }

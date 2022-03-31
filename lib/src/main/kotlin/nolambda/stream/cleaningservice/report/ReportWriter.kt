@@ -1,6 +1,8 @@
 package nolambda.stream.cleaningservice.report
 
+import java.io.File
+
 interface ReportWriter<OUT> {
-    fun write(vararg reports: String)
+    fun write(file: File, vararg extraInfo: String)
     fun dump(): OUT
 }
