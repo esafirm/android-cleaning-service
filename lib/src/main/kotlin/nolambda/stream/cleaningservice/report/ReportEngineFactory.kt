@@ -18,10 +18,8 @@ class DefaultReportEngineFactory(
 
     override fun create(remover: AbstractRemover): ReportEngine {
         // Create report dir if not exists
-        val dirName = File(DEFAULT_DIR_NAME)
-        if (dirName.exists().not()) {
-            dirName.mkdirs()
-        }
+        val dirName = File(reportDir)
+        dirName.mkdirs()
 
         val reportFileName = "cleaning_report_${remover.fileType}.csv"
 

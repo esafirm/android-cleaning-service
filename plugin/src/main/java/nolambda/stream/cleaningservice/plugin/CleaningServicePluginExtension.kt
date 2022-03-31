@@ -36,7 +36,10 @@ open class CleaningServicePluginExtension(factory: ObjectFactory) {
             excludeNames = excludeNames.get(),
             dryRun = dryRun.get(),
             logger = if (enableLog.get()) SimpleLogger() else NoopLogger,
-            reportEngineFactory = DefaultReportEngineFactory(pathResolver = PathResolver.RelativeToParent(rootDir))
+            reportEngineFactory = DefaultReportEngineFactory(
+                reportDir = File(rootDir, DefaultReportEngineFactory.DEFAULT_DIR_NAME).path,
+                pathResolver = PathResolver.RelativeToParent(rootDir)
+            )
         )
     }
 
