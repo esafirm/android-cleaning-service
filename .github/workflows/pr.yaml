@@ -18,9 +18,19 @@ jobs:
         with:
           distribution: adopt-openj9
           java-version: '11'
+
+      - name: Test the sample
+        run: cd sample && ./gradlew cleaningServiceAll && cd ..
+
       - name: Build the library module
         run: ./gradlew lib:test lib:jar
+
       - name: Build the plugin module
         run: ./gradlew plugin:test plugin:jar
-      - name: Test the sample
-        run: cd sample && ./gradlew cleaningServiceAll
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            lib/build/reports/**
