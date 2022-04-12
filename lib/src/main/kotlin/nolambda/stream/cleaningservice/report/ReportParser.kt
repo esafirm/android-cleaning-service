@@ -1,5 +1,8 @@
 package nolambda.stream.cleaningservice.report
 
+import nolambda.stream.cleaningservice.remover.RemoverFactory
+import nolambda.stream.cleaningservice.remover.file.FileRemover
+import nolambda.stream.cleaningservice.remover.xml.XmlValueRemover
 import java.io.File
 
 interface ReportParser {
@@ -21,6 +24,8 @@ class DefaultReportParser(
     private val projectDir: File,
     private val reportDir: File
 ) : ReportParser {
+
+    private val allRemovers by lazy { RemoverFactory.getAllRemovers() }
 
     override fun parse(): List<ReportParser.DeleteAction> {
         val reportFiles = reportDir.listFiles().orEmpty()
@@ -49,9 +54,10 @@ class DefaultReportParser(
     }
 
     private fun identifierToRemover(identifier: String): ReportParser.RemoverType {
-        return when (identifier) {
-            "layout" -> ReportParser.RemoverType.FILE
-            "string" -> ReportParser.RemoverType.XML
+        val remover = allRemovers.find { it.resourceName == identifier }
+        return when (remover) {
+            is FileRemover -> ReportParser.RemoverType.FILE
+            is XmlValueRemover -> ReportParser.RemoverType.XML
             else -> error(
                 "There's no remover with identifier \"$identifier\". " +
                     "Please don't change the result name because the remover rely on the naming convention"

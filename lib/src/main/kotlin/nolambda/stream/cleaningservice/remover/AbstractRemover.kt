@@ -36,7 +36,7 @@ abstract class AbstractRemover(
             val stringBuilder = StringBuilder()
 
             moduleSrcDirs.map { File(it) }
-                .filter { it.exists() }
+                .filter { it.exists() && it.isDirectory.not() }
                 .forEach { srcDirFile ->
                     srcDirFile.listFiles { _, name ->
                         FILE_TYPE_FILTER.matches(name)

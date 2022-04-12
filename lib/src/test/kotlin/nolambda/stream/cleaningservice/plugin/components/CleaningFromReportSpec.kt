@@ -28,7 +28,8 @@ class CleaningFromReportSpec : StringSpec({
 
         val removedFiles = listOf(
             "myawesomemodule1/src/main/res/values/strings-unused.xml",
-            "myawesomemodule2/src/main/res/layout/acitivty_unused.xml"
+            "myawesomemodule2/src/main/res/layout/acitivty_unused.xml",
+            "myawesomemodule2/src/main/res/drawable/ic_unused.xml"
         )
 
         val removedItemFiles = listOf(
@@ -36,6 +37,7 @@ class CleaningFromReportSpec : StringSpec({
         )
 
         removedFiles.forEach {
+            println("Check if file exists for $it")
             File(sampleDir, it).exists() shouldBe false
         }
 
