@@ -16,7 +16,7 @@ class ColorRemoverSpec : FunSpec({
             row("R.color.primary_", false),
             row("color.primary", true),
             row("color.primary ", true),
-            row("color.primary)", false),
+            row("color.primary)", true),
             row("@color/primary\"", true),
             row("@color/primary<", true),
             row("@color/primary:", true),

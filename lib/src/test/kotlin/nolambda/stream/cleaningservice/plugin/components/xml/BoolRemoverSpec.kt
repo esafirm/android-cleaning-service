@@ -17,7 +17,7 @@ class BoolRemoverSpec : FunSpec({
             row("bool.pref_value", true),
             row("bool.pref_value ", true),
             row("bool.pref_value_", false),
-            row("bool.pref_value)", false),
+            row("bool.pref_value)", true),
             row("@bool/pref_value\"", true),
             row("@bool/pref_value<", true),
             row("R.bool.pref", false),

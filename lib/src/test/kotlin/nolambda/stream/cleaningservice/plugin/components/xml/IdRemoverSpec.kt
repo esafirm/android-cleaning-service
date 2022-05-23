@@ -17,7 +17,7 @@ class IdRemoverSpec : FunSpec({
             row("id.view_id", true),
             row("id.view_id ", true),
             row("id.view_id_", false),
-            row("id.view_id)", false),
+            row("id.view_id)", true),
             row("@id/view_id\"", true),
             row("@id/view_id<", true),
             row("R.id.view", false),
