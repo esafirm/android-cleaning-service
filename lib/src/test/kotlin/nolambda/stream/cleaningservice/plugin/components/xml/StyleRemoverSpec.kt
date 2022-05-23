@@ -13,6 +13,9 @@ class StyleRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.style.TitleTextAppearance", true),
+            row("R.style.TitleTextAppearance_", false),
+            row("style.TitleTextAppearance", true),
+            row("style.TitleTextAppearance_", false),
             row("@style/TitleTextAppearance\"", true),
             row("@style/TitleTextAppearance<", true),
             row("parent=\"TitleTextAppearance\"", true),

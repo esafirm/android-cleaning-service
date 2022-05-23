@@ -13,6 +13,10 @@ class ColorRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.color.primary", true),
+            row("R.color.primary_", false),
+            row("color.primary", true),
+            row("color.primary ", true),
+            row("color.primary)", false),
             row("@color/primary\"", true),
             row("@color/primary<", true),
             row("@color/primary:", true),

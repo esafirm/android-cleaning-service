@@ -13,6 +13,12 @@ class StringRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.string.app_name", true),
+            row("R.string.app_name)", true),
+            row("R.string.app_name_", false),
+            row("string.app_name", true),
+            row("string.app_name ", true),
+            row("string.app_name)", true),
+            row("string.app_name_", false),
             row("@string/app_name\"", true),
             row("@string/app_name<", true),
             row("@string/app_name(", true),

@@ -13,6 +13,11 @@ class BoolRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.bool.pref_value", true),
+            row("R.bool.pref_value_", false),
+            row("bool.pref_value", true),
+            row("bool.pref_value ", true),
+            row("bool.pref_value_", false),
+            row("bool.pref_value)", false),
             row("@bool/pref_value\"", true),
             row("@bool/pref_value<", true),
             row("R.bool.pref", false),

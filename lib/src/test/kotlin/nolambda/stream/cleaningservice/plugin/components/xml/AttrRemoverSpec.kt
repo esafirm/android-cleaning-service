@@ -13,6 +13,10 @@ class AttrRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.styleable.CustomView", true),
+            row("R.styleable.CustomView ", true),
+            row("R.styleable.CustomView_", false),
+            row("styleable.CustomView", true),
+            row("styleable.CustomView_", false),
             row("R.style.CustomView", false),
         ) { (text, expected) ->
 
