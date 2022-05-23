@@ -13,6 +13,12 @@ class IntegerRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.integer.max_length", true),
+            row("R.integer.max_length_", false),
+            row("integer.max_length", true),
+            row("integer.max_length ", true),
+            row("integer.max_length)", true),
+            row("integer.max_length_", false),
+            row("string.app_name_", false),
             row("@integer/max_length\"", true),
             row("@integer/max_length<", true),
             row("R.integer.max", false),

@@ -13,6 +13,11 @@ class DimenRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.dimen.text_medium", true),
+            row("R.dimen.text_medium_", false),
+            row("dimen.text_medium", true),
+            row("dimen.text_medium_", false),
+            row("dimen.text_medium ", true),
+            row("dimen.text_medium)", true),
             row("@dimen/text_medium\"", true),
             row("@dimen/text_medium<", true),
             row("R.dimen.text", false),

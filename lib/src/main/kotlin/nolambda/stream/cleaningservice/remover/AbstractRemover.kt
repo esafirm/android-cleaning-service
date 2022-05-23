@@ -2,6 +2,7 @@ package nolambda.stream.cleaningservice.remover
 
 import nolambda.stream.cleaningservice.CleaningServiceConfig
 import nolambda.stream.cleaningservice.SearchPattern
+import nolambda.stream.cleaningservice.remover.textgenerator.SourceTextGenerator
 import nolambda.stream.cleaningservice.report.ReportEngine
 import nolambda.stream.cleaningservice.report.ReportWriter
 import nolambda.stream.cleaningservice.utils.Logger
@@ -17,47 +18,6 @@ abstract class AbstractRemover(
     val resourceName: String,
     val type: SearchPattern.Type
 ) {
-
-    companion object {
-        private val FILE_TYPE_FILTER = Regex("(.*\\.xml)|(.*\\.kt)|(.*\\.java)|(.*\\.gradle)")
-
-        private fun checkIfDirExists(dirs: List<String>) {
-            dirs.forEach {
-                val file = File(it)
-                if (file.exists().not()) {
-                    error("Passed module directory: $it is not exits")
-                }
-            }
-        }
-
-        fun createScanTargetFileTexts(moduleSrcDirs: List<String>): String {
-            checkIfDirExists(moduleSrcDirs)
-
-            val stringBuilder = StringBuilder()
-
-            moduleSrcDirs.map { File(it) }
-                .filter { it.exists() && it.isDirectory.not() }
-                .forEach { srcDirFile ->
-                    srcDirFile.listFiles { _, name ->
-                        FILE_TYPE_FILTER.matches(name)
-                    }?.forEach { f ->
-                        stringBuilder.append(f.readText().replace("\n", "").replace(" ", ""))
-                    }
-                }
-
-            moduleSrcDirs.map { File("${it}/src") }
-                .forEach { srcDirFile ->
-                    srcDirFile.walk().filter {
-                        FILE_TYPE_FILTER.matches(it.name)
-                    }.forEach { f ->
-                        stringBuilder.append(f.readText())
-                    }
-                }
-
-            return stringBuilder.toString()
-        }
-    }
-
     // Visible for testing
     internal var scanTargetFileTexts = ""
 
@@ -100,7 +60,7 @@ abstract class AbstractRemover(
         this.logger = extension.logger
         this.reportEngine = extension.reportEngineFactory.create(this)
 
-        scanTargetFileTexts = createScanTargetFileTexts(scopeModuleDirs)
+        scanTargetFileTexts = SourceTextGenerator(moduleSrcDirs = scopeModuleDirs).generate()
 
         val targetDir = File("./build").apply { mkdirs() }
         val targetFile = File(targetDir, "target_file")

@@ -13,6 +13,11 @@ class IdRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.id.view_id", true),
+            row("R.id.view_id_", false),
+            row("id.view_id", true),
+            row("id.view_id ", true),
+            row("id.view_id_", false),
+            row("id.view_id)", true),
             row("@id/view_id\"", true),
             row("@id/view_id<", true),
             row("R.id.view", false),

@@ -13,6 +13,9 @@ class ThemeRemoverSpec : FunSpec({
     context("It should remove valid elements") {
         forAll(
             row("R.style.AppTheme_Translucent", true),
+            row("R.style.AppTheme_Translucent_", false),
+            row("style.AppTheme_Translucent", true),
+            row("style.AppTheme_Translucent_", false),
             row("@style/AppTheme.Translucent\"", true),
             row("@style/AppTheme.Translucent<", true),
             row("parent=\"AppTheme.Translucent\"", true),

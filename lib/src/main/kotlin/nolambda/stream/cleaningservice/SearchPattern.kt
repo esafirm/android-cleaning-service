@@ -25,22 +25,29 @@ class SearchPattern {
             }.capitalize()
         }
 
+        /**
+         * @return pattern for R class that used in Kotlin or Java file
+         */
+        private fun resPattern(resourceName: String, target: String): String {
+            return "(${resourceName}\\.${target}(?![a-zA-Z_]))"
+        }
+
         fun create(resourceName: String, target: String, type: Type = Type.DEFAULT): Regex {
             val pattern = when (type) {
                 Type.STYLE -> {
                     val t = toCamelCaseWithUnderscore(target)
-                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\/:;<=>?@\\[\\\\\\]^`{|}~])|(R\\.${resourceName}\\.$t)|(${target}\\.)|(parent=\"${target}\")"
+                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\/:;<=>?@\\[\\\\\\]^`{|}~])|${resPattern(resourceName, t)}|(${target}\\.)|(parent=\"${target}\")"
                 }
                 Type.DRAWABLE -> {
                     val t = target.removeSuffix(".9")
-                    "(@(${resourceName}|${resourceName}StateList)\\/${t}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]^`{|}~])|(R\\.${resourceName}\\.${t})"
+                    "(@(${resourceName}|${resourceName}StateList)\\/${t}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]^`{|}~])|${resPattern(resourceName, t)}"
                 }
                 Type.LAYOUT -> {
                     val t = toCamelCase(target)
-                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|(R\\.${resourceName}\\.${target})|(${t}Binding)|(\\.${target}\\.)"
+                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|${resPattern(resourceName, target)}|(${t}Binding)|(\\.${target}\\.)"
                 }
                 Type.DEFAULT -> {
-                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|(R\\.${resourceName}\\.${target})"
+                    "(@(${resourceName}|${resourceName}StateList)\\/${target}[\\s!\"#\\\$%&'()\\*\\+\\-\\,\\\\\\/:;<=>?@\\[\\\\\\]`{|}~])|${resPattern(resourceName, target)}"
                 }
             }
             return Regex(pattern)
