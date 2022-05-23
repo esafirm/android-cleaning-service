@@ -8,6 +8,9 @@ import com.sample.localaar.myawesomemodule2.AwesomeModule2
 import com.sample.localaar.myawesomemodule3.AwesomeModule3
 import kotlinx.android.synthetic.main.activity_main.*
 
+// Import alias in Kotlin
+import com.sample.localaar.myawesomemodule1.R.string as RString
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         // Fully qualified import
         textView4.text = getString(used_full_qualified_import)
+
+        // This is alias
+        textView4.text = getString(RString.used_aliased)
 
         setContentView(R.layout.activity_one)
     }
